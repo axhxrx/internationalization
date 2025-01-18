@@ -51,7 +51,7 @@ console.log(menu);
 
 ## Happenings
 
-⏱️ 2025-01-19: add test for TypeScript type-checking performance (to avoid inadvertent introduction of "slow types")
+⏱️ 2025-01-19: version 0.0.5: add test for TypeScript type-checking performance (to avoid inadvertent introduction of "slow types")
 
 🩹 2025-01-18: version 0.0.4: Fix missing export
 
