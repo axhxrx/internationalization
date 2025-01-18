@@ -60,7 +60,9 @@ describe('TypeScript type-checking performance of tsc with a large Localization 
     expect(largeFile.checkTime).toBeGreaterThan(0);
     expect(simpleFile.checkTime).toBeGreaterThan(0);
 
-    expect(largeFile.checkTime).toBeLessThan(1);
+    // I had to bump this above 1.0 because GitHub Actions CI filesystem is so slow that the "I/O Read time" is sometimes over 0.5s (vs 0.02s on a normal computer).
+    expect(largeFile.checkTime).toBeLessThan(1.25);
+    
     expect(simpleFile.checkTime).toBeLessThan(1);
 
     expect(largeFile.checkTime).toBeLessThan(simpleFile.checkTime * 1.5);
