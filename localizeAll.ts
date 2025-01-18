@@ -41,9 +41,12 @@ export const localizeAll = <
     {
       // This is a leaf node (LocalizedUnit)
       Object.defineProperty(result, key, {
-        get: () => localize(
-          value, { ...options, skipInterpolation: true }),
-          enumerable: true,
+        get: () =>
+          localize(
+            value,
+            { ...options, skipInterpolation: true },
+          ),
+        enumerable: true,
       });
     }
     else

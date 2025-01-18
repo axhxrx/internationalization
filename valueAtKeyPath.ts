@@ -1,10 +1,7 @@
-type PathValue<T, P extends string> = P extends `${infer K}.${infer R}`
-  ? K extends keyof T
-    ? PathValue<T[K], R>
-    : never
-  : P extends keyof T
-    ? T[P]
-    : never;
+type PathValue<T, P extends string> = P extends `${infer K}.${infer R}` ? K extends keyof T ? PathValue<T[K], R>
+  : never
+  : P extends keyof T ? T[P]
+  : never;
 
 /**
  Retrieves a value from a nested object structure using a dot-separated key path.
@@ -25,17 +22,21 @@ type PathValue<T, P extends string> = P extends `${infer K}.${infer R}`
  */
 export const valueAtKeyPath = <
   T extends Record<string, unknown>,
-  P extends string
+  P extends string,
 >(
   tree: T,
-  keyPath: P
-): PathValue<T, P> => {
-  if (!keyPath) {
+  keyPath: P,
+): PathValue<T, P> =>
+{
+  if (!keyPath)
+  {
     throw new Error('valueAtKeyPath(): Key path cannot be empty');
   }
 
-  return keyPath.split('.').reduce<unknown>((obj, key) => {
-    if (obj === null || obj === undefined || typeof obj !== 'object') {
+  return keyPath.split('.').reduce<unknown>((obj, key) =>
+  {
+    if (obj === null || obj === undefined || typeof obj !== 'object')
+    {
       throw new Error(`Invalid path: ${keyPath}`);
     }
     return (obj as Record<string, unknown>)[key];

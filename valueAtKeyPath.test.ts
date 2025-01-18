@@ -1,7 +1,7 @@
 import { expect } from '@std/expect';
 import { describe, it } from '@std/testing/bdd';
-import { valueAtKeyPath } from './valueAtKeyPath.ts';  
 import { localizeAll } from './localizeAll.ts';
+import { valueAtKeyPath } from './valueAtKeyPath.ts';
 
 const input1 = {
   button: {
@@ -54,5 +54,4 @@ describe('valueAtKeyPath', () =>
     const value = valueAtKeyPath(input1, 'button.delete.no');
     expect(value).toBeUndefined();
   });
-
 });
