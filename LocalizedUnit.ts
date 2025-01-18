@@ -79,3 +79,53 @@ export type LocalizedUnit<Locales extends string, MetadataType = unknown> = '_me
   }> & {
     readonly _metadata?: MetadataType;
   };
+
+export type LocalizedUnitOff<Locales extends string> = Readonly<
+  Record<Locales, string>
+>;
+
+/**
+ Intermediate type used only for conditional type checking in `LocalizedValues<T>`
+ */
+export type IsLocalizedUnitType<T, Locales extends string> = T extends { [K in Locales]: string } ? true : false;
+
+/**
+ Type guard to check if a value is a `LocalizedUnit`.
+ */
+export const isLocalizedUnit = <Locales extends string>(
+  value: unknown,
+): value is LocalizedUnit<Locales> =>
+{
+  if (!value)
+  {
+    return false;
+  }
+  if (typeof value !== 'object')
+  {
+    return false;
+  }
+  // We'd like to do this, but we cannot know here what the actual set of locales is:
+  //
+  // if (!('en' in value) || !('ja' in value)) {
+  //   return false;
+  // }
+  // if (typeof value.en !== 'string' || typeof value.ja !== 'string') {
+  //   return false;
+  // }
+  //
+  // So we have to do this instead:
+  const locales = Object.keys(value);
+  if (locales.length === 0)
+  {
+    return false;
+  }
+  for (const locale of locales)
+  {
+    const localeValue = (value as Record<string, unknown>)[locale];
+    if (typeof localeValue !== 'string')
+    {
+      return false;
+    }
+  }
+  return true;
+};

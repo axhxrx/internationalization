@@ -28,6 +28,6 @@ export function main()
   const menu = `
   1. ${localize(loc.greeting, { locale: threeRandomLocales[0] })}
   3. ${localize(loc.greeting, { locale: threeRandomLocales[2] })}    
-`
+`;
   console.log(menu);
 }
