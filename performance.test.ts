@@ -23,6 +23,7 @@ async function runTsc(file: string)
   const elapsedMs = end - start;
 
   const stdoutString = new TextDecoder().decode(stdout);
+  const stderrString = new TextDecoder().decode(stderr);
 
   expect(code, 'tsc exited with a non-zero exit code').toBe(0);
   expect(stdoutString, 'tsc produced no output').not.toBe('');
@@ -35,7 +36,7 @@ async function runTsc(file: string)
   expect(match, 'tsc produced a valid check time line').not.toBe(null);
   const checkTime = parseFloat(match![1]);
 
-  return { code, stdout, stderr, elapsedMs, checkTime };
+  return { code, stdout: stdoutString, stderr: stderrString, elapsedMs, checkTime };
 }
 
 describe('TypeScript type-checking performance of tsc with a large Localization and related types', () =>
@@ -45,8 +46,11 @@ describe('TypeScript type-checking performance of tsc with a large Localization 
     const largeFile = await runTsc('performance.fixture.ts');
     const simpleFile = await runTsc('escapeHTML.ts');
 
-    console.log(`checkTime: ${largeFile.checkTime}ms vs ${simpleFile.checkTime}ms`);
-    
+    console.log(`checkTime: ${largeFile.checkTime}ms vs ${simpleFile.checkTime}s`);
+
+    console.log(largeFile);
+    console.log(simpleFile);
+
     expect(largeFile.code).toBe(0);
     expect(largeFile.stdout).not.toBe('');
 
