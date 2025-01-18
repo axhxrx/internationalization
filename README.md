@@ -50,6 +50,7 @@ console.log(menu);
 ```
 
 ## Happenings
+✨ 2025-01-18: version 0.0.3: Add valueAtKeyPath() utility function
 👹 2025-01-18: version 0.0.2 adds tree conversion with localizeAll(), and fixes up some type-related stuff
 👹 2025-01-18: initial draft of implementation
 🤖 2025-01-13: repo initialized by Bottie McBotface bot@axhxrx.com

@@ -9,7 +9,9 @@ import type { IsLocalizedUnitType } from './LocalizedUnit.ts';
 
  By using this type, we are able to describe to TypeScript the exact structure of the tree, and do so in a way that TypeScript can understand and enforce with as-you-type auto-completion and errors.
  */
+// dprint-ignore
 export type TreeOfStringValues<T, Locales extends string> = {
-  readonly [K in keyof T]: IsLocalizedUnitType<T[K], Locales> extends true ? T[K][keyof T[K]]
+  readonly [K in keyof T]: IsLocalizedUnitType<T[K], Locales> extends true
+    ? T[K][keyof T[K]]
     : TreeOfStringValues<T[K], Locales>;
 };

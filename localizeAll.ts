@@ -1,4 +1,5 @@
 import type { Localization } from './Localization.ts';
+import { LocalizationOptions, LocalizationOptionsExcludingInterpolation } from './LocalizationOptions.ts';
 import { localize } from './localize.ts';
 
 import { isLocalizedUnit } from './LocalizedUnit.ts';
@@ -27,6 +28,7 @@ export const localizeAll = <
   InputT extends Record<string, unknown> = Localization<Locales>,
 >(
   Localizations: InputT,
+  options: LocalizationOptionsExcludingInterpolation<Locales> = {},
 ): LocalizedTree<InputT, Locales> =>
 {
   const result: LocalizedTree<InputT, Locales> = {} as LocalizedTree<
@@ -39,8 +41,9 @@ export const localizeAll = <
     {
       // This is a leaf node (LocalizedUnit)
       Object.defineProperty(result, key, {
-        get: () => localize(value, { skipInterpolation: true }),
-        enumerable: true,
+        get: () => localize(
+          value, { ...options, skipInterpolation: true }),
+          enumerable: true,
       });
     }
     else
@@ -50,6 +53,7 @@ export const localizeAll = <
 
       unsafeMutableResult[key] = localizeAll(
         value as LocalizedTree<InputT, Locales>,
+        options,
       );
     }
   }

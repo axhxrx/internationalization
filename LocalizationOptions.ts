@@ -33,3 +33,8 @@ export type LocalizationOptions<Locales extends string> = {
    */
   failureHandler?: (error: LocalizationFailure<Locales>) => void;
 };
+
+export type LocalizationOptionsExcludingInterpolation<Locales extends string> = Omit<
+  LocalizationOptions<Locales>,
+  'interpolationParameters' | 'skipInterpolation'
+>;
