@@ -1,15 +1,5 @@
 import type { LocalizedUnit } from './LocalizedUnit.ts';
 
-declare global
-{
-  interface Document
-  {
-    documentElement: {
-      lang: string;
-    };
-  }
-}
-
 /**
   This default implementation may be sufficient for most use cases, but it can be overridden by the consuming app, if necessary.
 
@@ -23,7 +13,8 @@ export const getCurrentLocale = <Locales extends string>(
 
   // Check if we're in a browser environment and can access document properties. If so, use the document's locale as specified in the <html> tag.
   const locale = (typeof globalThis !== 'undefined' && 'document' in globalThis
-    && (globalThis as unknown as { document: Document }).document?.documentElement?.lang) || FALLBACK_LOCALE; // 🤖🤮
+    // deno-lint-ignore no-explicit-any
+    && (globalThis as unknown as { document: any }).document?.documentElement?.lang) || FALLBACK_LOCALE; // 🤖🤮
 
   if (!localizedUnit)
   {
