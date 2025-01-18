@@ -8,6 +8,8 @@ export * from './LocalizationOptions.ts';
 export * from './localize.ts';
 export * from './localizeAll.ts';
 export * from './LocalizedUnit.ts';
+export * from './TreeOfStringValues.ts';
+export * from './valueAtKeyPath.ts';
 
 import { main } from './main.ts';
 
