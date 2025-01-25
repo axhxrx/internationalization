@@ -1,5 +1,4 @@
 /**
- A "localized item" type, which defines the shape of a piece of text content that has been translated into multiple languages, which are defined by the type parameter `Locales`.
  A "localized item" type, which defines the shape of a piece of text content that has been translated into multiple languages, which are defined by the generic type parameter `Locales`.
 
  The expected usage of this type is that each app or library defines its own supported locales, and a base type that is "an item localized into the languages of the supported locales". Example:
