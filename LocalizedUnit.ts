@@ -110,7 +110,7 @@ export const isLocalizedUnit = <Locales extends string>(
   // }
   //
   // So we have to do this instead:
-  const locales = Object.keys(value);
+  const locales = Object.keys(value).filter(key => key !== '_metadata');
   if (locales.length === 0)
   {
     return false;
