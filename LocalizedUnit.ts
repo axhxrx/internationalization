@@ -80,10 +80,6 @@ export type LocalizedUnit<Locales extends string, MetadataType = unknown> = '_me
     readonly _metadata?: MetadataType;
   };
 
-export type LocalizedUnitOff<Locales extends string> = Readonly<
-  Record<Locales, string>
->;
-
 /**
  Intermediate type used only for conditional type checking in `LocalizedValues<T>`
  */
