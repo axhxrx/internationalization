@@ -116,6 +116,8 @@ console.log(menu);
 
 ## Happenings
 
+🔧 2025-01-31: version 0.0.7: fix bug, add `isLocalization()`
+
 📖 2025-01-25: version 0.0.6: update docs
 
 ⏱️ 2025-01-19: version 0.0.5: add test for TypeScript type-checking performance (to avoid inadvertent introduction of "slow types")
