@@ -1,6 +1,7 @@
 export * from './CurrentLocale.ts';
 export * from './escapeHTML.ts';
 export * from './interpolate.ts';
+export * from './isLocalization.ts';
 export * from './keys.ts';
 export * from './Localization.ts';
 export * from './LocalizationFailure.ts';

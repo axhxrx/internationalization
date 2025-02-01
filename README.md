@@ -116,6 +116,8 @@ console.log(menu);
 
 ## Happenings
 
+🔧 2025-01-31: version 0.0.8: fix missing export
+
 🔧 2025-01-31: version 0.0.7: fix bug, add `isLocalization()`
 
 📖 2025-01-25: version 0.0.6: update docs
