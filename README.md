@@ -116,6 +116,8 @@ console.log(menu);
 
 ## Happenings
 
+✨ 2025-03-17: version 0.0.9: improve `isLocalization()` with some type fuckery, to be a type-narrowing type guard, which is convenient enough a the point of use to be worth it
+
 🔧 2025-01-31: version 0.0.8: fix missing export
 
 🔧 2025-01-31: version 0.0.7: fix bug, add `isLocalization()`

@@ -1,6 +1,7 @@
 import { expect } from '@std/expect';
 import { describe, it } from '@std/testing/bdd';
 import { isLocalization } from './isLocalization.ts';
+import type { Localization } from './Localization.ts';
 
 describe('isLocalization', () =>
 {
@@ -44,9 +45,64 @@ describe('isLocalization', () =>
 
     it('should handle invalid matching locales', () =>
     {
-      // @ts-expect-error Type 'number' is not assignable to type 'string'
-      expect(isLocalization(fruits, ['not', 123])).toBe(false);
+      // This will correctly fail at runtime
+      expect(isLocalization(fruits, ['not', 123 as any])).toBe(false);
       expect(isLocalization(fruits, {})).toBe(false);
+    });
+
+    it('causes TS to narrow the type correctly when using array arg', () =>
+    {
+      const enJaLocales = ['en', 'ja'] as const; // Make this a readonly tuple type
+
+      function checkEnJa(value: Localization<'en' | 'ja'>)
+      {
+        expect(isLocalization(value, enJaLocales)).toBe(true);
+      }
+
+      const x: unknown = fruits;
+
+      // This should fail because x is unknown
+      // @ts-expect-error Type 'unknown' is not assignable to parameter of type 'Localization<"en" | "ja">'
+      checkEnJa(x);
+
+      // Use the Localization object for type narrowing
+      if (isLocalization(x, enJaLocalization))
+      {
+        // Now TypeScript should know x is Localization<"en" | "ja">
+        checkEnJa(x);
+      }
+    });
+
+    it('causes TS to narrow the type correctly when using object arg', () =>
+    {
+      const enJaLocalization: Localization<'en' | 'ja'> = {
+        apple: {
+          en: 'apple',
+          ja: 'りんご',
+        },
+        pomegranate: {
+          en: 'pomegranate',
+          ja: 'ザクロ',
+        },
+      };
+
+      function checkEnJa(value: Localization<'en' | 'ja'>)
+      {
+        expect(isLocalization(value, enJaLocalization)).toBe(true);
+      }
+
+      const x: unknown = fruits;
+
+      // This should fail because x is unknown
+      // @ts-expect-error Type 'unknown' is not assignable to parameter of type 'Localization<"en" | "ja">'
+      checkEnJa(x);
+
+      // Use the Localization object for type narrowing
+      if (isLocalization(x, enJaLocalization))
+      {
+        // Now TypeScript should know x is Localization<"en" | "ja">
+        checkEnJa(x);
+      }
     });
   });
 });
@@ -55,14 +111,31 @@ describe('isLocalization edge cases', () =>
 {
   it('returns false for invalid leaf nodes', () =>
   {
-    expect(isLocalization({
-      button: {
-        delete: {
-          en: 123, // Not a string
-          ja: '削除',
-        },
+    const badLocalization1 = {
+      delete: {
+        en: 'Delete',
+        ja: '削除',
       },
-    })).toBe(false);
+      save: {
+        en: 'Save',
+        ja: 'セーブ',
+      },
+      invalid: {
+        en: 123, // Not a string
+        ja: '削除',
+      },
+    };
+
+    expect(isLocalization(badLocalization1)).toBe(false);
+
+    const badLocalization2 = {
+      delete: {
+        en: 123, // Not a string
+        ja: '削除',
+      },
+    };
+
+    expect(isLocalization(badLocalization2)).toBe(false);
   });
 
   it('returns false for inconsistent locale sets', () =>
@@ -139,3 +212,14 @@ const invalidBreads = {
     de: 'Pretzel',
   },
 } as const;
+
+const enJaLocalization: Localization<'en' | 'ja'> = {
+  apple: {
+    en: 'apple',
+    ja: 'りんご',
+  },
+  pomegranate: {
+    en: 'pomegranate',
+    ja: 'ザクロ',
+  },
+};

@@ -1,7 +1,22 @@
-/**
- Runtime check to determine if a value looks like a `Localization`, and (optionally) matches a reference `Localization` or set of string locales (e.g. `['en', 'ja']`).
+import type { Localization } from './Localization.ts';
 
- Note: This is a runtime-only check that verifies if an object has the expected Localization structure. We can't actually check this at compile time because we can't know the generic `Locales` type parameter.
+/**
+ Type helper that extracts the `Locales` types from different types of source object (either a `Localization<Locales>` or an array of `string` locales).
+
+ This is a lot of type fuckery and looks like 🤖🤮 but OTOH it is very convenient to be able to narrow the type of an unknown value (e.g. something coming from JSON) to get a `Localization` matching a known set of `Locales`.
+ */
+// dprint-ignore
+export type InferLocalizationType<
+  DefaultLocalesT extends string,
+  MatchingLocalesRefT,
+  > = MatchingLocalesRefT extends readonly (infer ExtractedLocalesT extends string)[]
+    ? Localization<ExtractedLocalesT>
+    : MatchingLocalesRefT extends Localization<infer ExtractedLocalesT>
+      ? Localization<ExtractedLocalesT>
+      : Localization<DefaultLocalesT>;
+
+/**
+ Type guard with a runtime check to determine if a value looks like a `Localization` (that is, is a valid `Localization<string>`), and (optionally) allows passing an array of your actual `Locales` so that you can check if the object is a `Localization` with a specific `Locales` type, such as `Locale<'en' | 'fr'>`).
 
  This function checks if:
  1. The value is a non-null object
@@ -13,12 +28,15 @@
 
  @param matchingLocales Optional reference object to compare locale sets against — can be another `Localization` that you know has a specific set of `Locales` or just an array of `string` locales (e.g. `['en', 'ja']`).
 
- @returns True if the value appears to have a valid Localization structure, and matches the reference if provided
+ @returns `true` (and causes TypeScript to narrow the type) if the value appears to have a valid Localization structure, and matches the reference if provided, otherwise `false`.
  */
-export const isLocalization = (
+export function isLocalization<
+  DefaultLocalesT extends string = string,
+  MatchingLocalesRefT = undefined,
+>(
   value: unknown,
-  matchingLocales?: Record<string, unknown> | string[],
-): boolean =>
+  matchingLocales?: MatchingLocalesRefT,
+): value is InferLocalizationType<DefaultLocalesT, MatchingLocalesRefT>
 {
   if (!value || typeof value !== 'object')
   {
@@ -31,7 +49,10 @@ export const isLocalization = (
   // Helper to check if an object looks like a LocalizedUnit
   const isLocalizedUnitLike = (obj: unknown): boolean =>
   {
-    if (!obj || typeof obj !== 'object') return false;
+    if (!obj || typeof obj !== 'object')
+    {
+      return false;
+    }
 
     const locales = Object.keys(obj).filter(key => key !== '_metadata');
     if (locales.length === 0)
@@ -64,7 +85,10 @@ export const isLocalization = (
   // Helper to recursively validate the structure
   const validateNode = (node: unknown): boolean =>
   {
-    if (!node || typeof node !== 'object') return false;
+    if (!node || typeof node !== 'object')
+    {
+      return false;
+    }
 
     // Check each property
     for (const [key, value] of Object.entries(node))
@@ -82,7 +106,11 @@ export const isLocalization = (
       else if (typeof value === 'object' && value !== null)
       {
         // This is an intermediate node (Localization)
-        if (!validateNode(value)) return false;
+        if (!validateNode(value))
+        {
+          console.error(`Invalid node: ${JSON.stringify(value)}`);
+          return false;
+        }
       }
       else
       {
@@ -128,14 +156,10 @@ export const isLocalization = (
       }
       firstLocaleSet = new Set(matchingLocales);
     }
-    else
+    else if (typeof matchingLocales === 'object' && matchingLocales !== null)
     {
-      // Case 2: matchingLocales is another Localization
-      if (!isLocalization(matchingLocales))
-      {
-        return false;
-      }
-
+      // Case 2: matchingLocales is another Localization-like object
+      // Look for the first LocalizedUnit-like object to get its locales
       firstLocaleSet = findFirstUnit(matchingLocales);
       if (!firstLocaleSet)
       {
@@ -143,7 +167,12 @@ export const isLocalization = (
         return false;
       }
     }
+    else
+    {
+      // Invalid matchingLocales type
+      return false;
+    }
   }
 
   return validateNode(value);
-};
+}
