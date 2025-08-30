@@ -5,6 +5,10 @@
   "license": "MIT",
   "imports": {
     "@std/expect": "jsr:@std/expect@^1.0.11",
-    "@std/testing": "jsr:@std/testing@^1.0.9"
+    "@std/testing": "jsr:@std/testing@^1.0.9",
+  },
+  "tasks": {
+    // Tests need to execute npx to run tsc
+    "test": "deno test --allow-run"
   }
 }

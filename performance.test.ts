@@ -1,16 +1,28 @@
 import { expect } from '@std/expect';
 import { describe, it } from '@std/testing/bdd';
 
-async function runTsc(file: string)
+/**
+ Runs the following command:
+
+ ```shell
+ export TS_FILE=performance.fixture.ts # or whatever...
+
+ npx -y --package typescript tsc --strict true --target esnext $TS_FILE --allowImportingTsExtensions --noEmit --extendedDiagnostics
+ ```
+ */
+async function runTsc(tsFile: string)
 {
   const tscCommand = new Deno.Command('npx', {
     args: [
+      '-y',
+      '--package',
+      'typescript',
       'tsc',
       '--strict',
       'true',
       '--target',
       'esnext',
-      file,
+      tsFile,
       '--allowImportingTsExtensions',
       '--noEmit',
       '--extendedDiagnostics',
@@ -70,7 +82,6 @@ describe('TypeScript type-checking performance of tsc with a large Localization 
     // This 'total elapsed time' thing doesn't work on GitHub Actions CI, because the "I/O Read time" and apparently the "spawn process" latency is super huge and causes widely-variable results.
     // expect(largeFile.elapsedMs).toBeGreaterThan(0);
     // expect(largeFile.elapsedMs).toBeLessThan(simpleFile.elapsedMs * 1.5);
-
   });
 });
 
