@@ -1,12 +1,12 @@
 import { expect } from '@std/expect';
 import { describe, it } from '@std/testing/bdd';
 
-import type { LocalizedUnit } from './LocalizedUnit.ts';
+import type { LocalizedStringUnit } from './LocalizedStringUnit.ts';
 
 type SupportedLocales = 'de' | 'en' | 'ja';
 
 // The expected usage is that each app or library defines its own supported locales, and a base type that is "an item localized into the languages of the supported locales". So this just simulates that for this test.
-type Localization = LocalizedUnit<SupportedLocales>;
+type Localization = LocalizedStringUnit<SupportedLocales>;
 
 describe('I18nItem', () =>
 {

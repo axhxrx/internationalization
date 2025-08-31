@@ -1,6 +1,6 @@
 import type { Localization } from './Localization.ts';
 
-import { isLocalizedUnit, type IsLocalizedUnitType } from './LocalizedUnit.ts';
+import { isLocalizedStringUnit, type IsLocalizedStringUnitType } from './LocalizedStringUnit.ts';
 import type { TreeOfStringValues } from './TreeOfStringValues.ts';
 
 type KeyPathTree<T, Locales extends string> = TreeOfStringValues<T, Locales>;
@@ -10,7 +10,7 @@ type KeyPathTree<T, Locales extends string> = TreeOfStringValues<T, Locales>;
  */
 // dprint-ignore
 type Keys<T, Locales extends string> = {
-  readonly [K in keyof T]: IsLocalizedUnitType<T[K], Locales> extends true
+  readonly [K in keyof T]: IsLocalizedStringUnitType<T[K], Locales> extends true
     ? string
     : KeyPathTree<T[K], Locales>;
 };
@@ -31,7 +31,7 @@ export const keys = <
   const result: Keys<InputT, Locales> = {} as Keys<InputT, Locales>;
   for (const [key, value] of Object.entries(localization))
   {
-    if (isLocalizedUnit(value))
+    if (isLocalizedStringUnit(value))
     {
       // This is a leaf node, make its value the key path to itself
       Object.defineProperty(result, key, {

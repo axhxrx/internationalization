@@ -1,4 +1,4 @@
-import type { LocalizedUnit } from './LocalizedUnit.ts';
+import type { LocalizedStringUnit } from './LocalizedStringUnit.ts';
 
 /**
   This default implementation may be sufficient for most use cases, but it can be overridden by the consuming app, if necessary.
@@ -6,8 +6,8 @@ import type { LocalizedUnit } from './LocalizedUnit.ts';
   FIXME: how?
  */
 export const getCurrentLocale = <Locales extends string>(
-  localizedUnit: LocalizedUnit<Locales>,
-): keyof LocalizedUnit<Locales> & string =>
+  localizedUnit: LocalizedStringUnit<Locales>,
+): keyof LocalizedStringUnit<Locales> & string =>
 {
   const FALLBACK_LOCALE = 'en';
 

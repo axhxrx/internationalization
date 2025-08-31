@@ -1,6 +1,6 @@
 import { escapeHTML } from './escapeHTML.ts';
 import type { LocalizationFailure } from './LocalizationFailure.ts';
-import type { LocalizedUnit } from './LocalizedUnit.ts';
+import type { LocalizedStringUnit } from './LocalizedStringUnit.ts';
 
 /**
  Function to interpolate messages
@@ -16,7 +16,7 @@ import type { LocalizedUnit } from './LocalizedUnit.ts';
  */
 export const interpolate = <Locales extends string>(
   originalText: string | undefined | null,
-  unit: LocalizedUnit<Locales>,
+  unit: LocalizedStringUnit<Locales>,
   locale: string,
   parameters?: Record<string, unknown>,
   escapeParameters = true,

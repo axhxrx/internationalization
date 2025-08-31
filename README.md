@@ -16,13 +16,21 @@ The key concepts are:
 
 - A **`Locale`** is a string that uniquely identifies a language or variant of a language.Examples might be `'en'` for English, `'ja'` for Japanese, or `'en_US'` / `'en_GB'` for more specific variants of English.
 
-- A [**`LocalizedUnit`**](./LocalizedUnit.ts) is a single item of text content that has been translated into all the supported locales. This is represented as a TypeScript type where each key is a locale identifier and each value is the translated string.
+- A [**`LocalizedUnit`**](./LocalizedUnit.ts) is a single item of text content that has been translated into all the supported locales. This is represented as a TypeScript type where each key is a locale identifier and each value is either a translated string OR a function that returns a translated string. Functions enable parameterized translations with strongly-typed parameters.
 
 ```ts
+// Simple string-based unit
 const exampleLocalizedUnit = {
   de: 'Werwolf',
   en: 'werewolf',
   ja: '狼人',
+} as const;
+
+// Function-based unit with parameters
+const greetingUnit = {
+  de: (name: string) => `Hallo, ${name}!`,
+  en: (name: string) => `Hello, ${name}!`,
+  ja: (name: string) => `こんにちは、${name}さん！`,
 } as const;
 ```
 
@@ -58,6 +66,22 @@ The structure is important, because the `LocalizedUnit` objects that contain the
 
 - The [**interpolate()**](./interpolate.ts) function performs the common task of replacing placeholders within a translation string with dynamic values provided at runtime. This requires escaping untrusted values, and this library provides an **escapeHTML()** function to do that for HTML content.
 
+## Parameterized Translations
+
+The library now supports **parameterized translations** using strongly-typed functions. This provides a more ergonomic and type-safe alternative to string interpolation for dynamic content (although it could be used to implement string interpolation if you need to do that, e.g. for interoperability with some other system or library).
+
+### Benefits:
+- **Full TypeScript type safety and static analysis**: Parameters are strongly typed, with compile-time checking, autocomplete, and doc hints.
+- **Cleaner syntax**: No need for placeholder syntax like `{{name}}`
+- **Flexible**: Mix simple strings and parameterized functions in the same tree
+
+### Types:
+- `LocalizedUnit` - The main type, supports both strings and functions
+- `LocalizedStringUnit` - String-only version
+- `LocalizedFunctionUnit` - Function-only version
+
+The `localizeAll()` function automatically handles both strings and functions, preserving the exact function signatures for full type safety.
+
 ## Usage
 
 Implement translations for your supported locales in one or more TypeScript files:
@@ -67,7 +91,7 @@ const localizations = {
   button: {
     erase: {
       en: 'Erase',
-      ja: '消去' ,
+      ja: '消去',
     },
     ok: {
       en: 'OK',
@@ -77,15 +101,31 @@ const localizations = {
       en: 'Cancel',
       ja: 'キャンセル',
     },
+    // NEW: Parameterized function for delete confirmation
+    deleteConfirm: {
+      en: (name: string) => `Delete "${name}"?`,
+      ja: (name: string) => `「${name}」を削除しますか？`,
+    },
   },
   greeting: {
     en: 'Welcome {{ username }}',
     ja: 'ようこそ {{username}}',
   },
+  // NEW: Function with multiple typed parameters
+  itemsFound: {
+    en: (count: number, query?: string) =>
+      query
+        ? `Found ${count} item${count !== 1 ? 's' : ''} matching "${query}"`
+        : `Found ${count} item${count !== 1 ? 's' : ''}`,
+    ja: (count: number, query?: string) =>
+      query
+        ? `"${query}"に一致する${count}件のアイテムが見つかりました`
+        : `${count}件のアイテムが見つかりました`,
+  },
 };
 
-// Optionally, extract the translations for a single locale at runtime for convenience and/or efficiency:
-const t = localizeAll(localizations);
+// Extract the translations for a single locale at runtime:
+const t = localizeAll(localizations, { locale: 'en' });
 ```
 
 In your app code, import the translations and then use them. E.g. in a web app template:
@@ -94,12 +134,20 @@ In your app code, import the translations and then use them. E.g. in a web app t
 <button>
   {{ t.button.erase }}
 </button>
+<!-- NEW: Call parameterized functions directly with full type safety -->
+<button>
+  {{ t.button.deleteConfirm('Document.pdf') }}
+</button>
 <p>
   {{ interpolate(t.greeting, { username }) }}
 </p>
+<!-- NEW: Functions with multiple parameters -->
+<p>
+  {{ t.itemsFound(3, 'typescript') }}
+</p>
 ```
 
-Any decent TypeScript editors supports autocompletion and documentation hints for the properties of these strongly-typed `Localization` and related objects: 
+Any decent TypeScript editors supports autocompletion and documentation hints for the properties of these strongly-typed `Localization` and related objects:
 
 ![alt text](README.screenshot.jpg)
 

@@ -1,64 +1,84 @@
-import type { Localization } from './Localization.ts';
-import { LocalizationOptions, LocalizationOptionsExcludingInterpolation } from './LocalizationOptions.ts';
+import type { Any } from './Any.ts';
+import type { LocalizationOptionsExcludingInterpolation } from './LocalizationOptions.ts';
 import { localize } from './localize.ts';
-
+import { isLocalizedFunctionUnit } from './LocalizedFunctionUnit.ts';
 import { isLocalizedUnit } from './LocalizedUnit.ts';
-import type { TreeOfStringValues } from './TreeOfStringValues.ts';
 
 /**
- Type for a tree structure whose leaf nodes are localized string values, which has the exact same tree structure as the object `T`. This is used by `localizeAll()` to convert a multi-locale `Localization` object to a tree with the same structure, but with translations for a single-locale.
+ Type that transforms a localization tree to preserve function signatures at leaf nodes.
+
+ This allows the resulting tree to have either strings or strongly-typed functions as its leaf nodes.
  */
-type LocalizedTree<T, Locales extends string> = TreeOfStringValues<T, Locales>;
+type LocalizedTreeWithFunctions<T, Locales extends string> = T extends {
+  [K in Locales]: infer Content;
+} ? Content extends (...args: Any[]) => string ? Content // Preserve the function signature
+  : string // Regular string
+  : T extends Record<string, Any> ? {
+      readonly [K in keyof T]: LocalizedTreeWithFunctions<T[K], Locales>;
+    }
+  : never;
 
 /**
- Takes an input object like `{ button: { delete: { en: 'Delete', ja: '削除' } } }` and returns a result like `{ button: { delete: '削除' } }`.
+ Localize all values in a tree structure, supporting both simple strings and parameterized functions.
 
- That is, it returns a new object with the same structure as the input object, but with all the values replaced by readonly localized string values for the current locale.
+ This allows you to define translations like:
+ ```ts
+ const translations = {
+   button: {
+     delete: {
+       en: (name: string) => `Delete ${name}`,
+       ja: (name: string) => `${name}を削除`
+     }
+   },
+   greeting: {
+     en: 'Hello',
+     ja: 'こんにちは'
+   }
+ }
+ ```
 
- Intended usage is for the app (or component, it needn't be app-level) to define a single object with all the i18n values (perhaps by composing them from smaller pieces using the spread operator), and then pass that object to this function to get a new object with all the values localized.
-
- NOTE: interpolation for placeholders like `Hello {{ name }}` will not be performed by this function. If you need interpolation, use `interpolate()` directly.
-
-  @param Localizations The object to localize
-
-  @returns A new object with all the values replaced by localized strings
+ And use them with full type safety:
+ ```ts
+ const t = localizeAllWithFunctions(translations);
+ t.button.delete('Document'); // Returns "Delete Document" or "Documentを削除"
+ t.greeting; // Returns "Hello" or "こんにちは"
+ ```
  */
 export const localizeAll = <
   Locales extends string,
-  InputT extends Record<string, unknown> = Localization<Locales>,
+  InputT extends Record<string, unknown>,
 >(
-  Localizations: InputT,
+  localizations: InputT,
   options: LocalizationOptionsExcludingInterpolation<Locales> = {},
-): LocalizedTree<InputT, Locales> =>
+): LocalizedTreeWithFunctions<InputT, Locales> =>
 {
-  const result: LocalizedTree<InputT, Locales> = {} as LocalizedTree<
-    InputT,
-    Locales
-  >;
-  for (const [key, value] of Object.entries(Localizations))
+  const result: Any = {};
+
+  for (const [key, value] of Object.entries(localizations))
   {
     if (isLocalizedUnit(value))
     {
-      // This is a leaf node (LocalizedUnit)
+      // String-based localized unit - return the localized string
       Object.defineProperty(result, key, {
-        get: () =>
-          localize(
-            value,
-            { ...options, skipInterpolation: true },
-          ),
+        get: () => localize(value, { ...options, skipInterpolation: true }),
         enumerable: true,
       });
     }
-    else
+    else if (isLocalizedFunctionUnit(value))
     {
-      // This is a nested object (Localizations), but we have to do just a little tiny bit of evil here to make TypeScript happy. This is because we must return `LocalizedValues<InputT>` from  this method in order to get bulletproof const typing.
-      const unsafeMutableResult = result as Record<string, unknown>;
-
-      unsafeMutableResult[key] = localizeAll(
-        value as LocalizedTree<InputT, Locales>,
-        options,
-      );
+      // Function-based localized unit - return a function that localizes
+      result[key] = (...args: Any[]) =>
+      {
+        const localeFn = value[options.locale || 'en'] as (...args: Any[]) => string;
+        return localeFn(...args);
+      };
+    }
+    else if (typeof value === 'object' && value !== null)
+    {
+      // Nested object - recurse
+      result[key] = localizeAll(value as Record<string, unknown>, options);
     }
   }
+
   return result;
 };

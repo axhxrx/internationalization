@@ -1,4 +1,4 @@
-import type { IsLocalizedUnitType } from './LocalizedUnit.ts';
+import type { IsLocalizedStringUnitType } from './LocalizedStringUnit.ts';
 
 /**
  This is a magical type that allows us to tell TypeScript "this is a tree structure whose leaf nodes are strings, which has the exact same tree structure as the object `T`".
@@ -11,7 +11,7 @@ import type { IsLocalizedUnitType } from './LocalizedUnit.ts';
  */
 // dprint-ignore
 export type TreeOfStringValues<T, Locales extends string> = {
-  readonly [K in keyof T]: IsLocalizedUnitType<T[K], Locales> extends true
+  readonly [K in keyof T]: IsLocalizedStringUnitType<T[K], Locales> extends true
     ? T[K][keyof T[K]]
     : TreeOfStringValues<T[K], Locales>;
 };

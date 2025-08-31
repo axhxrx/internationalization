@@ -37,6 +37,10 @@ async function runTsc(tsFile: string)
   const stdoutString = new TextDecoder().decode(stdout);
   const stderrString = new TextDecoder().decode(stderr);
 
+  if (code !== 0)
+  {
+    console.error('tsc exited with a non-zero exit code', code, stderrString);
+  }
   expect(code, 'tsc exited with a non-zero exit code').toBe(0);
   expect(stdoutString, 'tsc produced no output').not.toBe('');
 

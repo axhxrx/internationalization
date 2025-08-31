@@ -2,7 +2,7 @@ import { getCurrentLocale } from './CurrentLocale.ts';
 import { interpolate } from './interpolate.ts';
 import type { LocalizationFailure } from './LocalizationFailure.ts';
 import type { LocalizationOptions } from './LocalizationOptions.ts';
-import type { LocalizedUnit } from './LocalizedUnit.ts';
+import type { LocalizedStringUnit } from './LocalizedStringUnit.ts';
 
 /**
  The `localize()` function returns the localized string for the given `msg` and `param` in the current locale. The 'current locale' is determined by the `getCurrentLocale()` function, whose implementation depends on the configuration that the consuming app must provide, unless the default implementation is sufficient.
@@ -10,7 +10,7 @@ import type { LocalizedUnit } from './LocalizedUnit.ts';
  This function has to be generic to make the end-to-end static typing work.
  */
 export const localize = <Locales extends string>(
-  unit: LocalizedUnit<Locales>,
+  unit: LocalizedStringUnit<Locales>,
   options: LocalizationOptions<Locales> = {},
 ): string =>
 {

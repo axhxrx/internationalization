@@ -1,4 +1,6 @@
-import type { LocalizedUnit } from './LocalizedUnit.ts';
+import { Any } from './Any.ts';
+import type { LocalizedStringUnit } from './LocalizedStringUnit.ts';
+import type { LocalizedFunctionUnit } from './LocalizedUnit.ts';
 
 /**
  A type for a set of localized values. The structure may be nested, e.g.:
@@ -19,5 +21,6 @@ import type { LocalizedUnit } from './LocalizedUnit.ts';
  The structure may be arbitrarily nested, but every leaf node is a `LocalizedUnit`. The supported locales are defined by the type parameter `Locales`, and the leaf nodes must use the same locales. The TypeScript type system is leveraged to produce errors when a locale is missing.
  */
 export type Localization<Locales extends string> = {
-  [key: string]: Localization<Locales> | LocalizedUnit<Locales>;
+  [key: string]: Localization<Locales> | LocalizedStringUnit<Locales> | LocalizedFunctionUnit<Locales,
+    (...args: Any[]) => string>;
 };

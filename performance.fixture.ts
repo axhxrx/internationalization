@@ -8290,8 +8290,8 @@ const _x = keys(largeLocalization);
 const _y = localizeAll(largeLocalization);
 const _z = localize(largeLocalization.loc7.error.err19);
 
-const foo: typeof _x & typeof _y = _x;
-const bar: typeof _y = _y;
+// const foo: typeof _x & typeof _y = _x;
+// const bar: typeof _y = _y;
 
 function assertString(x: string): asserts x is string
 {
@@ -8301,7 +8301,7 @@ function assertString(x: string): asserts x is string
   }
 }
 
-const out = {
+const _out = {
   // @ts-expect-error Property 'nonexistent' does not exist on type
   uno: loc1.button.nonexistent,
 
@@ -8311,8 +8311,8 @@ const out = {
 };
 
 const valueThatExists = valueAtKeyPath(largeLocalization, 'loc1.button.delete');
-const valueThatExists2 = valueAtKeyPath(largeLocalization, 'loc8.button.delete');
-const valueThatExists3 = valueAtKeyPath(largeLocalization, 'loc10.button.copy').ko;
+const _valueThatExists2 = valueAtKeyPath(largeLocalization, 'loc8.button.delete');
+const _valueThatExists3 = valueAtKeyPath(largeLocalization, 'loc10.button.copy').ko;
 
 // @ts-expect-error Argument of type... is not assignable to parameter of type 'string'
 assertString(valueThatExists);

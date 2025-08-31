@@ -1,11 +1,11 @@
 import { expect } from '@std/expect';
 import { describe, it } from '@std/testing/bdd';
 import { localize } from './localize.ts';
-import type { LocalizedUnit } from './LocalizedUnit.ts';
+import type { LocalizedStringUnit } from './LocalizedStringUnit.ts';
 
 describe('localize()', () =>
 {
-  const mockI18nItem: LocalizedUnit<'en' | 'ja'> = {
+  const mockI18nItem: LocalizedStringUnit<'en' | 'ja'> = {
     en: 'Hello {{name}}',
     ja: 'こんにちは {{name}}',
   };
