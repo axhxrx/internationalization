@@ -3,12 +3,18 @@
   "version": "0.0.10",
   "exports": "./mod.ts",
   "license": "MIT",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+  },
   "imports": {
     "@std/expect": "jsr:@std/expect@^1.0.11",
     "@std/testing": "jsr:@std/testing@^1.0.9",
+    "react": "npm:react",
+    "@types/react": "npm:@types/react",
   },
   "tasks": {
     // Tests need to execute npx to run tsc
-    "test": "deno test --allow-run"
-  }
+    "test": "deno test --allow-run --allow-env",
+  },
 }

@@ -1,8 +1,8 @@
-import type { Any } from './Any.ts';
-import type { LocalizationOptionsExcludingInterpolation } from './LocalizationOptions.ts';
-import { localize } from './localize.ts';
-import { isLocalizedFunctionUnit } from './LocalizedFunctionUnit.ts';
-import { isLocalizedUnit } from './LocalizedUnit.ts';
+import type { Any } from "./Any.ts";
+import type { LocalizationOptionsExcludingInterpolation } from "./LocalizationOptions.ts";
+import { localize } from "./localize.ts";
+import { isLocalizedFunctionUnit } from "./LocalizedFunctionUnit.ts";
+import { isLocalizedUnit } from "./LocalizedUnit.ts";
 
 /**
  Type that transforms a localization tree to preserve function signatures at leaf nodes.
@@ -11,12 +11,15 @@ import { isLocalizedUnit } from './LocalizedUnit.ts';
  */
 type LocalizedTreeWithFunctions<T, Locales extends string> = T extends {
   [K in Locales]: infer Content;
-} ? Content extends (...args: Any[]) => string ? Content // Preserve the function signature
-  : string // Regular string
-  : T extends Record<string, Any> ? {
-      readonly [K in keyof T]: LocalizedTreeWithFunctions<T[K], Locales>;
-    }
-  : never;
+}
+  ? Content extends (...args: Any[]) => unknown
+    ? Content // Preserve the function signature
+    : unknown
+  : T extends Record<string, Any>
+    ? {
+        readonly [K in keyof T]: LocalizedTreeWithFunctions<T[K], Locales>;
+      }
+    : never;
 
 /**
  Localize all values in a tree structure, supporting both simple strings and parameterized functions.
@@ -50,31 +53,25 @@ export const localizeAll = <
 >(
   localizations: InputT,
   options: LocalizationOptionsExcludingInterpolation<Locales> = {},
-): LocalizedTreeWithFunctions<InputT, Locales> =>
-{
+): LocalizedTreeWithFunctions<InputT, Locales> => {
   const result: Any = {};
 
-  for (const [key, value] of Object.entries(localizations))
-  {
-    if (isLocalizedUnit(value))
-    {
+  for (const [key, value] of Object.entries(localizations)) {
+    if (isLocalizedUnit(value)) {
       // String-based localized unit - return the localized string
       Object.defineProperty(result, key, {
         get: () => localize(value, { ...options, skipInterpolation: true }),
         enumerable: true,
       });
-    }
-    else if (isLocalizedFunctionUnit(value))
-    {
+    } else if (isLocalizedFunctionUnit(value)) {
       // Function-based localized unit - return a function that localizes
-      result[key] = (...args: Any[]) =>
-      {
-        const localeFn = value[options.locale || 'en'] as (...args: Any[]) => string;
+      result[key] = (...args: Any[]) => {
+        const localeFn = value[options.locale || "en"] as (
+          ...args: Any[]
+        ) => string;
         return localeFn(...args);
       };
-    }
-    else if (typeof value === 'object' && value !== null)
-    {
+    } else if (typeof value === "object" && value !== null) {
       // Nested object - recurse
       result[key] = localizeAll(value as Record<string, unknown>, options);
     }
