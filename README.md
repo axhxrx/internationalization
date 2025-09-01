@@ -164,6 +164,8 @@ console.log(menu);
 
 ## Happenings
 
+🍒 2025-09-01: version 0.0.12: Bump version due to SNAFU
+
 🍒 2025-09-01: version 0.0.11: Don't restrict leaf-node functions to returning strings (enables returning JSX elements, etc)
 
 ✨ 2025-09-01: version 0.0.10: add support for strongly-typed function leaf nodes, in addition to strings
