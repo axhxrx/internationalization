@@ -8335,9 +8335,7 @@ else
   console.log('not party hardy');
 }
 
-const derived = en === 'Delete'
-  ? 'woo!'
-  : false;
+const derived = en === 'Delete' ? 'woo!' : false;
 
 if (derived)
 {

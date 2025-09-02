@@ -4,4 +4,9 @@ export const localizationWithReactElements = {
     ja: (name: string) => <>{`こんにちは、${name}さん！`}</>,
     de: (name: string) => <>{`Hallo, ${name}!`}</>,
   },
+  string: {
+    en: 'a string',
+    ja: '文字列',
+    de: 'Zeichenkette',
+  },
 };

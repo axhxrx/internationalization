@@ -1,7 +1,7 @@
 name: CI + Publish (if needed)
 on:
   push:
-    branches: ["*"]
+    branches: ['*']
 
 jobs:
   test:
@@ -33,5 +33,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Publish package (if new version exists)"
+      - name: 'Publish package (if new version exists)'
         run: npx jsr publish

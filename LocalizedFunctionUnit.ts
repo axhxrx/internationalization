@@ -9,11 +9,15 @@ export type LocalizedFunctionUnit<
   Fn extends (...args: Any[]) => string,
   MetadataType = unknown,
 > = '_metadata' extends Locales ? never
-  : Readonly<{
-    [K in Locales]: Fn;
-  }> & {
-    readonly _metadata?: MetadataType;
-  };
+  :
+    & Readonly<
+      {
+        [K in Locales]: Fn;
+      }
+    >
+    & {
+      readonly _metadata?: MetadataType;
+    };
 
 /**
  Type guard to check if a value is a LocalizedFunctionUnit
@@ -27,7 +31,7 @@ export const isLocalizedFunctionUnit = <Locales extends string>(
     return false;
   }
 
-  const locales = Object.keys(value).filter(key => key !== '_metadata');
+  const locales = Object.keys(value).filter((key) => key !== '_metadata');
   if (locales.length === 0)
   {
     return false;

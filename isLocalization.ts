@@ -9,11 +9,11 @@ import type { Localization } from './Localization.ts';
 export type InferLocalizationType<
   DefaultLocalesT extends string,
   MatchingLocalesRefT,
-  > = MatchingLocalesRefT extends readonly (infer ExtractedLocalesT extends string)[]
+> = MatchingLocalesRefT extends readonly (infer ExtractedLocalesT extends string)[]
+  ? Localization<ExtractedLocalesT>
+  : MatchingLocalesRefT extends Localization<infer ExtractedLocalesT>
     ? Localization<ExtractedLocalesT>
-    : MatchingLocalesRefT extends Localization<infer ExtractedLocalesT>
-      ? Localization<ExtractedLocalesT>
-      : Localization<DefaultLocalesT>;
+    : Localization<DefaultLocalesT>;
 
 /**
  Type guard with a runtime check to determine if a value looks like a `Localization` (that is, is a valid `Localization<string>`), and (optionally) allows passing an array of your actual `Locales` so that you can check if the object is a `Localization` with a specific `Locales` type, such as `Locale<'en' | 'fr'>`).
@@ -54,7 +54,7 @@ export function isLocalization<
       return false;
     }
 
-    const locales = Object.keys(obj).filter(key => key !== '_metadata');
+    const locales = Object.keys(obj).filter((key) => key !== '_metadata');
     if (locales.length === 0)
     {
       return false;
@@ -79,7 +79,7 @@ export function isLocalization<
     // Otherwise, compare against the first set we found
     const currentSet = new Set(locales);
     if (currentSet.size !== firstLocaleSet.size) return false;
-    return [...currentSet].every(locale => firstLocaleSet!.has(locale));
+    return [...currentSet].every((locale) => firstLocaleSet!.has(locale));
   };
 
   // Helper to recursively validate the structure
@@ -133,7 +133,7 @@ export function isLocalization<
 
       if (isLocalizedUnitLike(val))
       {
-        return new Set(Object.keys(val).filter(k => k !== '_metadata'));
+        return new Set(Object.keys(val).filter((k) => k !== '_metadata'));
       }
       else if (typeof val === 'object' && val !== null)
       {
@@ -150,7 +150,7 @@ export function isLocalization<
     if (Array.isArray(matchingLocales))
     {
       // Case 1: matchingLocales is a string array
-      if (!matchingLocales.every(locale => typeof locale === 'string'))
+      if (!matchingLocales.every((locale) => typeof locale === 'string'))
       {
         return false;
       }

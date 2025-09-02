@@ -46,7 +46,7 @@ async function runTsc(tsFile: string)
 
   const checkTimeLine = stdoutString
     .split('\n')
-    .find(line => line.includes('Check time'));
+    .find((line) => line.includes('Check time'));
 
   const match = checkTimeLine!.match(/([\d.]+)s/);
   expect(match, 'tsc produced a valid check time line').not.toBe(null);

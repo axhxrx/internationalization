@@ -8,9 +8,9 @@ export * from './LocalizationFailure.ts';
 export * from './LocalizationOptions.ts';
 export * from './localize.ts';
 export * from './localizeAll.ts';
-export * from './LocalizedUnit.ts';
-export * from './LocalizedStringUnit.ts';
 export * from './LocalizedFunctionUnit.ts';
+export * from './LocalizedStringUnit.ts';
+export * from './LocalizedUnit.ts';
 export * from './TreeOfStringValues.ts';
 export * from './valueAtKeyPath.ts';
 

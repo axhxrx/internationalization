@@ -74,16 +74,23 @@
  This library doesn't itself populate or use this metadata.
  */
 export type LocalizedStringUnit<Locales extends string, MetadataType = unknown> = '_metadata' extends Locales ? never
-  : Readonly<{
-    [K in Locales]: string;
-  }> & {
-    readonly _metadata?: MetadataType;
-  };
+  :
+    & Readonly<
+      {
+        [K in Locales]: string;
+      }
+    >
+    & {
+      readonly _metadata?: MetadataType;
+    };
 
+// dprint-ignore
 /**
  Intermediate type used only for conditional type checking in `LocalizedValues<T>`
  */
-export type IsLocalizedStringUnitType<T, Locales extends string> = T extends { [K in Locales]: string } ? true : false;
+export type IsLocalizedStringUnitType<T, Locales extends string> = T extends { [K in Locales]: string }
+  ? true
+  : false;
 
 /**
  Type guard to check if a value is a `LocalizedStringUnit`.
@@ -110,7 +117,7 @@ export const isLocalizedStringUnit = <Locales extends string>(
   // }
   //
   // So we have to do this instead:
-  const locales = Object.keys(value).filter(key => key !== '_metadata');
+  const locales = Object.keys(value).filter((key) => key !== '_metadata');
   if (locales.length === 0)
   {
     return false;

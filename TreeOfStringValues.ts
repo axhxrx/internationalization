@@ -11,7 +11,6 @@ import type { IsLocalizedStringUnitType } from './LocalizedStringUnit.ts';
  */
 // dprint-ignore
 export type TreeOfStringValues<T, Locales extends string> = {
-  readonly [K in keyof T]: IsLocalizedStringUnitType<T[K], Locales> extends true
-    ? T[K][keyof T[K]]
+  readonly [K in keyof T]: IsLocalizedStringUnitType<T[K], Locales> extends true ? T[K][keyof T[K]]
     : TreeOfStringValues<T[K], Locales>;
 };
