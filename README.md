@@ -164,6 +164,8 @@ console.log(menu);
 
 ## Happenings
 
+🧟‍♂️ 2025-09-02: version 0.0.13: Bump version due to I made a new bug yesterday 😭 (mixed fn/string leaf-nodes didn't work for the strings... so the bug was only in the new feature, at least)
+
 🍒 2025-09-01: version 0.0.12: Bump version due to SNAFU
 
 🍒 2025-09-01: version 0.0.11: Don't restrict leaf-node functions to returning strings (enables returning JSX elements, etc)

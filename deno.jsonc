@@ -1,20 +1,20 @@
 {
   "name": "@axhxrx/internationalization",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "exports": "./mod.ts",
   "license": "MIT",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "react",
+    "jsxImportSource": "react"
   },
   "imports": {
     "@std/expect": "jsr:@std/expect@^1.0.11",
     "@std/testing": "jsr:@std/testing@^1.0.9",
     "react": "npm:react",
-    "@types/react": "npm:@types/react",
+    "@types/react": "npm:@types/react"
   },
   "tasks": {
     // Tests need to execute npx to run tsc
-    "test": "deno test --allow-run --allow-env",
-  },
+    "test": "deno test --allow-run --allow-env"
+  }
 }
