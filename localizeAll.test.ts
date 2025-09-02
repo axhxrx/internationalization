@@ -1,7 +1,8 @@
-import { assertGreater } from '@std/assert/greater';
-import { assertEquals } from 'jsr:@std/assert';
-import { assertInstanceOf } from 'jsr:@std/assert/instance-of';
-import { assertNotEquals } from 'jsr:@std/assert/not-equals';
+import {
+  assertEquals,
+  assertGreater,
+  assertNotEquals,
+} from '@std/assert';
 import { localizationWithReactElements } from './localizeAll.fixture.tsx';
 import { localizeAll } from './localizeAll.ts';
 

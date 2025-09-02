@@ -46,7 +46,7 @@ describe('isLocalization', () =>
     it('should handle invalid matching locales', () =>
     {
       // This will correctly fail at runtime
-      expect(isLocalization(fruits, ['not', 123 as any])).toBe(false);
+      expect(isLocalization(fruits, ['not', 123 as unknown])).toBe(false);
       expect(isLocalization(fruits, {})).toBe(false);
     });
 
