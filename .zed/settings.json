@@ -13,6 +13,14 @@
     }
   },
   "languages": {
+    "JSONC": {
+      "formatter": {
+        "external": {
+          "command": "/usr/local/bin/dprint",
+          "arguments": ["fmt", "--stdin", "{buffer_path}"]
+        }
+      }
+    },
     "JavaScript": {
       "language_servers": [
         "deno",
@@ -29,7 +37,12 @@
         "!vtsls",
         "!eslint"
       ],
-      "formatter": "language_server"
+      "formatter": {
+        "external": {
+          "command": "/usr/local/bin/dprint",
+          "arguments": ["fmt", "--stdin", "{buffer_path}"]
+        }
+      }
     },
     "TSX": {
       "language_servers": [
@@ -38,7 +51,12 @@
         "!vtsls",
         "!eslint"
       ],
-      "formatter": "language_server"
+      "formatter": {
+        "external": {
+          "command": "/usr/local/bin/dprint",
+          "arguments": ["fmt", "--stdin", "{buffer_path}"]
+        }
+      }
     }
   }
 }
