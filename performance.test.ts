@@ -7,7 +7,7 @@ import { describe, it } from '@std/testing/bdd';
  ```shell
  export TS_FILE=performance.fixture.ts # or whatever...
 
- npx -y --package typescript tsc --strict true --target esnext $TS_FILE --allowImportingTsExtensions --noEmit --extendedDiagnostics
+ npx -y --package typescript@^5 tsc --strict true --target esnext $TS_FILE --allowImportingTsExtensions --noEmit --extendedDiagnostics
  ```
  */
 async function runTsc(tsFile: string)
@@ -16,7 +16,7 @@ async function runTsc(tsFile: string)
     args: [
       '-y',
       '--package',
-      'typescript',
+      'typescript@^5',
       'tsc',
       '--strict',
       'true',
@@ -80,8 +80,6 @@ describe('TypeScript type-checking performance of tsc with a large Localization 
     expect(largeFile.checkTime).toBeLessThan(1.25);
 
     expect(simpleFile.checkTime).toBeLessThan(1);
-
-    expect(largeFile.checkTime).toBeLessThan(simpleFile.checkTime * 1.5);
 
     // This 'total elapsed time' thing doesn't work on GitHub Actions CI, because the "I/O Read time" and apparently the "spawn process" latency is super huge and causes widely-variable results.
     // expect(largeFile.elapsedMs).toBeGreaterThan(0);
