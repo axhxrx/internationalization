@@ -3,7 +3,7 @@ import {
   assertGreater,
   assertNotEquals,
 } from '@std/assert';
-import { localizationWithReactElements } from './localizeAll.fixture.tsx';
+import { localizationWithJsxElements } from './localizeAll.fixture.tsx';
 import { localizeAll } from './localizeAll.ts';
 
 // Define supported locales
@@ -123,10 +123,10 @@ Deno.test('localizeAll - functions with optional parameters', () =>
   assertEquals(t.message.itemsFound(0), 'Found 0 items');
 });
 
-Deno.test('localizeAll - functions returning React elements', () =>
+Deno.test('localizeAll - functions returning JSX elements', () =>
 {
-  const t = localizeAll<AppLocales, typeof localizationWithReactElements>(
-    localizationWithReactElements,
+  const t = localizeAll<AppLocales, typeof localizationWithJsxElements>(
+    localizationWithJsxElements,
     { locale: 'en' },
   );
 

@@ -1,4 +1,4 @@
-export const localizationWithReactElements = {
+export const localizationWithJsxElements = {
   hello: {
     en: (name: string) => <>{`Hello, ${name}!`}</>,
     ja: (name: string) => <>{`こんにちは、${name}さん！`}</>,
