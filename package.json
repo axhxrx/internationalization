@@ -1,0 +1,9 @@
+{
+  "name": "@axhxrx/internationalization",
+  "module": "mod.ts",
+  "type": "module",
+  "devDependencies": {},
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
