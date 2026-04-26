@@ -1,6 +1,7 @@
 {
   "name": "@axhxrx/internationalization",
   "module": "mod.ts",
+  "exports": "./mod.ts",
   "type": "module",
   "devDependencies": {},
   "peerDependencies": {
