@@ -10,7 +10,7 @@ import { isLocalizedUnit } from './LocalizedUnit.ts';
 
  This allows the resulting tree to have either strings or strongly-typed functions as its leaf nodes.
  */
-type LocalizedTreeWithFunctions<T, Locales extends string> = T extends {
+export type LocalizedTreeWithFunctions<T, Locales extends string> = T extends {
   [K in Locales]: infer Content;
 } ? Content extends (...args: Any[]) => unknown
     ? Content // Preserve the function signature
